@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Einfache Demo von PHP/AJAX</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, td, th {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+        th {text-align: left;}
+    </style>
+</head>
+<body>
+
+<div style="text-align: center;">
+<form id="myform">
+    Organisation: <input type="text" name="organisation">
+    Branche: <input type="text" name="branche">
+    Mitarbeiter: <input type="text" name="mitarbeiter">
+    Umsatz: <input type="text" name="umsatz">
+</form>
+
+<button onclick="addEntry()">Hinzufügen</button>
+<button onclick="listEntries()">Auflisten</button>
+</div>
+
+<br>
+
+<div id="mycontent">
+    tabelle
+</div>
+
+<script>
+    function addEntry() {
+        const form_elements = document.getElementById("myform").elements;
+        const organisation = form_elements["organisation"].value;
+        const branche = form_elements["branche"].value;
+        const mitarbeiter = form_elements["mitarbeiter"].value;
+        const umsatz = form_elements["umsatz"].value;
+
+        if (organisation.length === 0) {
+            document.getElementById("mycontent").innerHTML = "invalid";
+
+        } else {
+            const xmlhttp = new XMLHttpRequest();
+
+            const query_str = "organisation=" + organisation +
+                              "&branche=" + branche +
+                              "&mitarbeiter=" + mitarbeiter +
+                              "&umsatz=" + umsatz;
+
+            xmlhttp.open("GET", "simple_demo.php?" + query_str, true);
+            xmlhttp.send();
+        }
+    }
+
+    function listEntries() {
+        const xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                document.getElementById("mycontent").innerHTML = this.responseText;
+            }
+        };
+        xmlhttp.open("GET", "simple_demo.php", true);
+        xmlhttp.send();
+    }
+
+</script>
+
+
+</body>
+</html>
